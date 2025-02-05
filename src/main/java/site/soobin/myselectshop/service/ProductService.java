@@ -95,6 +95,17 @@ public class ProductService {
     productFolderRepository.save(new ProductFolder(product, folder));
   }
 
+  public Page<ProductResponseDto> getProductsInFolder(
+      UserDetailsImpl principal, Long folderId, int page, int size, String sortBy, boolean isAsc) {
+    User user = getUserFromPrincipal(principal);
+    Pageable pageable = getProductPageable(page, size, sortBy, isAsc);
+
+    Page<Product> products =
+        productRepository.findAllByUserAndProductFolderList_FolderId(user, folderId, pageable);
+
+    return products.map(ProductResponseDto::new);
+  }
+
   private boolean isOptimalPrice(int price) {
     return price >= MIN_MY_PRICE;
   }
