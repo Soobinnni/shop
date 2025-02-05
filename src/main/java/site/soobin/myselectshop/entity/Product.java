@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import site.soobin.myselectshop.dto.ProductMypriceRequestDto;
 import site.soobin.myselectshop.dto.ProductRequestDto;
 
 @Entity // JPA가 관리할 수 있는 Entity 클래스 지정
@@ -37,5 +38,9 @@ public class Product extends Timestamped {
     this.image = requestDto.getImage();
     this.link = requestDto.getLink();
     this.lprice = requestDto.getLprice();
+  }
+
+  public void update(ProductMypriceRequestDto requestDto) {
+    this.myprice = requestDto.getMyprice();
   }
 }
