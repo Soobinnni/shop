@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import site.soobin.myselectshop.commons.exception.ApiBusinessException;
+import site.soobin.myselectshop.commons.security.UserDetailsImpl;
 import site.soobin.myselectshop.domains.user.application.dto.SignupRequestDto;
+import site.soobin.myselectshop.domains.user.application.dto.UserInfoDto;
 import site.soobin.myselectshop.domains.user.application.exception.UserErrorSpec;
 import site.soobin.myselectshop.domains.user.domain.entity.User;
 import site.soobin.myselectshop.domains.user.domain.entity.UserRoleEnum;
@@ -39,5 +41,9 @@ public class UserService {
     // 사용자 등록
     User user = new User(username, password, email, role);
     userRepository.save(user);
+  }
+
+  public UserInfoDto getUserInfo(UserDetailsImpl principal) {
+    return domainService.getUserInfo(principal);
   }
 }

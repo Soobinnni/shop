@@ -1,9 +1,9 @@
 package site.soobin.myselectshop.commons.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.web.context.request.WebRequest;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiErrorResponseFactory {
@@ -23,8 +23,6 @@ public class ApiErrorResponseFactory {
   }
 
   private static String extractPath(Object request) {
-    return request instanceof HttpServletRequest
-        ? ((HttpServletRequest) request).getRequestURI()
-        : null;
+    return request instanceof WebRequest ? ((WebRequest) request).getDescription(false) : null;
   }
 }
