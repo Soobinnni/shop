@@ -1,15 +1,19 @@
 package site.soobin.myselectshop.domains.product.domain.entity;
 
+import static site.soobin.myselectshop.domains.product.domain.ProductConstants.MIN_MY_PRICE;
+
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import site.soobin.myselectshop.commons.exception.ApiBusinessException;
 import site.soobin.myselectshop.commons.jpa.Timestamped;
 import site.soobin.myselectshop.domains.folder.domain.entity.ProductFolder;
 import site.soobin.myselectshop.domains.product.application.dto.ProductMypriceRequestDto;
 import site.soobin.myselectshop.domains.product.application.dto.ProductRequestDto;
+import site.soobin.myselectshop.domains.product.application.exception.ProductErrorSpec;
 import site.soobin.myselectshop.domains.product.infrastructure.external.naver.dto.ItemDto;
 import site.soobin.myselectshop.domains.user.domain.entity.User;
 
@@ -60,5 +64,22 @@ public class Product extends Timestamped {
 
   public void updateByItemDto(ItemDto requestDto) {
     this.lprice = requestDto.getLprice();
+  }
+
+  public void validateAndUpdateMyPrice(int myPrice) {
+    if (!isOptimalPrice(myPrice)) {
+      throw new ApiBusinessException(ProductErrorSpec.INVALID_PRICE);
+    }
+    this.myprice = myPrice;
+  }
+
+  public void validateOwnership(User user) {
+    if (!this.user.getId().equals(user.getId())) {
+      throw new ApiBusinessException(ProductErrorSpec.NOT_OWNED_PRODUCT);
+    }
+  }
+
+  private boolean isOptimalPrice(int price) {
+    return price >= MIN_MY_PRICE;
   }
 }
