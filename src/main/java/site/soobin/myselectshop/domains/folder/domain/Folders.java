@@ -21,7 +21,7 @@ public class Folders {
   public List<Folder> createNewFolders(List<String> folderNames, User user) {
     return folderNames.stream()
         .peek(this::validateDuplicateName)
-        .map(name -> new Folder(name, user))
+        .map(name -> Folder.builder(name, user).build())
         .collect(Collectors.toList());
   }
 }

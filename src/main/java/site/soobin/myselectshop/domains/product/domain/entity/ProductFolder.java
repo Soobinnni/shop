@@ -1,15 +1,18 @@
 package site.soobin.myselectshop.domains.product.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import site.soobin.myselectshop.domains.folder.domain.entity.Folder;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
+@Builder(access = AccessLevel.PUBLIC, builderMethodName = "innerBuilder")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "product_folder")
 public class ProductFolder {
   @Id
@@ -24,8 +27,7 @@ public class ProductFolder {
   @JoinColumn(name = "folder_id", nullable = false)
   private Folder folder;
 
-  public ProductFolder(Product product, Folder folder) {
-    this.product = product;
-    this.folder = folder;
+  public static ProductFolderBuilder builder(Product product, Folder folder) {
+    return innerBuilder().product(product).folder(folder);
   }
 }

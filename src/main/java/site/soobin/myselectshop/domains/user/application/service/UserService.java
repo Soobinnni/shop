@@ -39,7 +39,7 @@ public class UserService {
         domainService.validateAndGetRole(requestDto.isAdmin(), requestDto.adminToken());
 
     // 사용자 등록
-    User user = new User(username, password, email, role);
+    User user = User.builder(username, password, email, role).build();
     userRepository.save(user);
   }
 

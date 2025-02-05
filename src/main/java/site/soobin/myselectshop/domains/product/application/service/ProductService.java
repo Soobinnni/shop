@@ -35,7 +35,8 @@ public class ProductService {
   @Transactional
   public ProductResponseDto createProduct(ProductRequestDto requestDto, UserDetailsImpl principal) {
     User user = principal.getUser();
-    Product product = productRepository.save(new Product(requestDto, user));
+    Product createdProduct = Product.builder(requestDto).user(user).build();
+    Product product = productRepository.save(createdProduct);
 
     return ProductResponseDto.from(product);
   }
@@ -76,7 +77,7 @@ public class ProductService {
       throw new ApiBusinessException(ProductErrorSpec.DUPLICATE_PRODUCT_IN_FOLDER);
     }
 
-    productFolderRepository.save(new ProductFolder(product, folder));
+    productFolderRepository.save(ProductFolder.builder(product, folder).build());
   }
 
   public List<Product> getProducts() {

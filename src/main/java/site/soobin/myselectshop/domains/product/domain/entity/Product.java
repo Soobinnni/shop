@@ -5,9 +5,11 @@ import static site.soobin.myselectshop.domains.product.domain.ProductConstants.M
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import site.soobin.myselectshop.commons.exception.ApiBusinessException;
 import site.soobin.myselectshop.commons.jpa.Timestamped;
 import site.soobin.myselectshop.domains.product.application.dto.ProductRequestDto;
@@ -15,11 +17,12 @@ import site.soobin.myselectshop.domains.product.application.exception.ProductErr
 import site.soobin.myselectshop.domains.product.infrastructure.external.naver.dto.ItemDto;
 import site.soobin.myselectshop.domains.user.domain.entity.User;
 
-@Entity // JPA가 관리할 수 있는 Entity 클래스 지정
+@Entity
 @Getter
-@Setter
+@Builder(access = AccessLevel.PUBLIC, builderMethodName = "innerBuilder")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "product") // 매핑할 테이블의 이름을 지정
-@NoArgsConstructor
 public class Product extends Timestamped {
 
   @Id
@@ -48,12 +51,12 @@ public class Product extends Timestamped {
   @OneToMany(mappedBy = "product")
   private List<ProductFolder> productFolderList = new ArrayList<>();
 
-  public Product(ProductRequestDto requestDto, User user) {
-    this.title = requestDto.title();
-    this.image = requestDto.image();
-    this.link = requestDto.link();
-    this.lprice = requestDto.lprice();
-    this.user = user;
+  public static ProductBuilder builder(ProductRequestDto requestDto) {
+    return innerBuilder()
+        .title(requestDto.title())
+        .image(requestDto.image())
+        .link(requestDto.link())
+        .lprice(requestDto.lprice());
   }
 
   public void updateByItemDto(ItemDto requestDto) {
