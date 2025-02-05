@@ -49,10 +49,10 @@ public class Product extends Timestamped {
   private List<ProductFolder> productFolderList = new ArrayList<>();
 
   public Product(ProductRequestDto requestDto, User user) {
-    this.title = requestDto.getTitle();
-    this.image = requestDto.getImage();
-    this.link = requestDto.getLink();
-    this.lprice = requestDto.getLprice();
+    this.title = requestDto.title();
+    this.image = requestDto.image();
+    this.link = requestDto.link();
+    this.lprice = requestDto.lprice();
     this.user = user;
   }
 

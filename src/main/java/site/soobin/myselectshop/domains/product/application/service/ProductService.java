@@ -37,15 +37,15 @@ public class ProductService {
     User user = principal.getUser();
     Product product = productRepository.save(new Product(requestDto, user));
 
-    return new ProductResponseDto(product);
+    return ProductResponseDto.from(product);
   }
 
   @Transactional
   public ProductResponseDto updateProduct(Long id, ProductMypriceRequestDto requestDto) {
     Product product = getProductById(id);
-    product.validateAndUpdateMyPrice(requestDto.getMyprice());
+    product.validateAndUpdateMyPrice(requestDto.myprice());
 
-    return new ProductResponseDto(product);
+    return ProductResponseDto.from(product);
   }
 
   @Transactional(readOnly = true)
@@ -90,15 +90,15 @@ public class ProductService {
 
     return productRepository
         .findAllByUserAndProductFolderList_FolderId(user, folderId, pageable)
-        .map(ProductResponseDto::new);
+        .map(ProductResponseDto::from);
   }
 
   private Page<ProductResponseDto> getAllProducts(Pageable pageable) {
-    return productRepository.findAll(pageable).map(ProductResponseDto::new);
+    return productRepository.findAll(pageable).map(ProductResponseDto::from);
   }
 
   private Page<ProductResponseDto> getProductsByUser(Pageable pageable, User user) {
-    return productRepository.findAllByUser(user, pageable).map(ProductResponseDto::new);
+    return productRepository.findAllByUser(user, pageable).map(ProductResponseDto::from);
   }
 
   private Product getProductById(Long id) {
