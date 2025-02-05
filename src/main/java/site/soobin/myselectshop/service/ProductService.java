@@ -8,8 +8,10 @@ import site.soobin.myselectshop.dto.ProductMypriceRequestDto;
 import site.soobin.myselectshop.dto.ProductRequestDto;
 import site.soobin.myselectshop.dto.ProductResponseDto;
 import site.soobin.myselectshop.entity.Product;
+import site.soobin.myselectshop.entity.User;
 import site.soobin.myselectshop.naver.dto.ItemDto;
 import site.soobin.myselectshop.repository.ProductRepository;
+import site.soobin.myselectshop.security.UserDetailsImpl;
 
 @Service
 @RequiredArgsConstructor
@@ -17,8 +19,8 @@ public class ProductService {
   private static final int MIN_MY_PRICE = 100;
   private final ProductRepository repository;
 
-  public ProductResponseDto createProduct(ProductRequestDto requestDto) {
-    Product product = repository.save(new Product(requestDto));
+  public ProductResponseDto createProduct(ProductRequestDto requestDto, UserDetailsImpl principal) {
+    Product product = repository.save(new Product(requestDto, getUserFromPrincipal(principal)));
     return new ProductResponseDto(product);
   }
 
@@ -39,8 +41,10 @@ public class ProductService {
     return new ProductResponseDto(product);
   }
 
-  public List<ProductResponseDto> getProducts() {
-    return repository.findAll().stream().map(ProductResponseDto::new).toList();
+  public List<ProductResponseDto> getProducts(UserDetailsImpl principal) {
+    return repository.findAllByUser(getUserFromPrincipal(principal)).stream()
+        .map(ProductResponseDto::new)
+        .toList();
   }
 
   @Transactional
@@ -53,6 +57,10 @@ public class ProductService {
     repository.save(product);
   }
 
+  public List<ProductResponseDto> getAllProducts() {
+    return repository.findAll().stream().map(ProductResponseDto::new).toList();
+  }
+
   private boolean isOptimalPrice(int price) {
     return price >= MIN_MY_PRICE;
   }
@@ -61,5 +69,9 @@ public class ProductService {
     return repository
         .findById(id)
         .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+  }
+
+  private User getUserFromPrincipal(UserDetailsImpl principal) {
+    return principal.getUser();
   }
 }
