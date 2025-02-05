@@ -1,7 +1,11 @@
 package site.soobin.myselectshop.service;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.soobin.myselectshop.dto.ProductMypriceRequestDto;
@@ -16,7 +20,7 @@ import site.soobin.myselectshop.security.UserDetailsImpl;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-  private static final int MIN_MY_PRICE = 100;
+  public static final int MIN_MY_PRICE = 100;
   private final ProductRepository repository;
 
   public ProductResponseDto createProduct(ProductRequestDto requestDto, UserDetailsImpl principal) {
@@ -41,10 +45,15 @@ public class ProductService {
     return new ProductResponseDto(product);
   }
 
-  public List<ProductResponseDto> getProducts(UserDetailsImpl principal) {
-    return repository.findAllByUser(getUserFromPrincipal(principal)).stream()
-        .map(ProductResponseDto::new)
-        .toList();
+  public Page<ProductResponseDto> getProducts(
+      UserDetailsImpl principal, int page, int size, String sortBy, boolean isAsc) {
+    User user = getUserFromPrincipal(principal);
+    Pageable pageable = getProductPageable(page, size, sortBy, isAsc);
+
+    return switch (user.getRole()) {
+      case ADMIN -> getAllProducts(pageable);
+      case USER -> getProductsByUser(pageable, user);
+    };
   }
 
   @Transactional
@@ -55,10 +64,6 @@ public class ProductService {
     // 상품 업데이트
     product.updateByItemDto(requestDto);
     repository.save(product);
-  }
-
-  public List<ProductResponseDto> getAllProducts() {
-    return repository.findAll().stream().map(ProductResponseDto::new).toList();
   }
 
   private boolean isOptimalPrice(int price) {
@@ -73,5 +78,20 @@ public class ProductService {
 
   private User getUserFromPrincipal(UserDetailsImpl principal) {
     return principal.getUser();
+  }
+
+  private Pageable getProductPageable(int page, int size, String sortBy, boolean isAsc) {
+    Sort.Direction direction = isAsc ? Sort.Direction.ASC : Direction.DESC;
+    Sort sort = Sort.by(direction, sortBy);
+
+    return PageRequest.of(page, size, sort);
+  }
+
+  private Page<ProductResponseDto> getAllProducts(Pageable pageable) {
+    return repository.findAll(pageable).map(ProductResponseDto::new);
+  }
+
+  private Page<ProductResponseDto> getProductsByUser(Pageable pageable, User user) {
+    return repository.findAllByUser(user, pageable).map(ProductResponseDto::new);
   }
 }
