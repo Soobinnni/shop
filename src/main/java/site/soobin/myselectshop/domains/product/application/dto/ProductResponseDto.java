@@ -1,6 +1,8 @@
 package site.soobin.myselectshop.domains.product.application.dto;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import site.soobin.myselectshop.domains.folder.application.dto.FolderResponseDto;
 import site.soobin.myselectshop.domains.product.domain.entity.Product;
 import site.soobin.myselectshop.domains.product.domain.entity.ProductFolder;
@@ -30,7 +32,8 @@ public record ProductResponseDto(
   }
 
   private static List<FolderResponseDto> getProductFolderListFromProduct(Product product) {
-    return product.getProductFolderList().stream()
+    return Optional.ofNullable(product.getProductFolderList()).stream()
+        .flatMap(Collection::stream)
         .map(ProductFolder::getFolder)
         .map(FolderResponseDto::from)
         .toList();
