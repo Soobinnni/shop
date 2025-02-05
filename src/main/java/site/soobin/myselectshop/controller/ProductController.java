@@ -45,4 +45,12 @@ public class ProductController {
       @RequestParam("isAsc") boolean isAsc) {
     return service.getProducts(principal, page - 1, size, sortBy, isAsc);
   }
+
+  @PostMapping("/{productId}/folder")
+  public void addFolder(
+      @PathVariable("productId") Long productId,
+      @RequestParam("folderId") Long folderId,
+      @AuthenticationPrincipal UserDetailsImpl principal) {
+    service.addFolder(productId, folderId, principal);
+  }
 }
