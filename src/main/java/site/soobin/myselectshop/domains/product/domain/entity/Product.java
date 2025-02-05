@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.soobin.myselectshop.commons.exception.ApiBusinessException;
 import site.soobin.myselectshop.commons.jpa.Timestamped;
-import site.soobin.myselectshop.domains.folder.domain.entity.ProductFolder;
-import site.soobin.myselectshop.domains.product.application.dto.ProductMypriceRequestDto;
 import site.soobin.myselectshop.domains.product.application.dto.ProductRequestDto;
 import site.soobin.myselectshop.domains.product.application.exception.ProductErrorSpec;
 import site.soobin.myselectshop.domains.product.infrastructure.external.naver.dto.ItemDto;
@@ -56,10 +54,6 @@ public class Product extends Timestamped {
     this.link = requestDto.getLink();
     this.lprice = requestDto.getLprice();
     this.user = user;
-  }
-
-  public void update(ProductMypriceRequestDto requestDto) {
-    this.myprice = requestDto.getMyprice();
   }
 
   public void updateByItemDto(ItemDto requestDto) {

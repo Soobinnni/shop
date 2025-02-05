@@ -1,4 +1,4 @@
-package site.soobin.myselectshop.domains.folder.presentation.api;
+package site.soobin.myselectshop.domains.product.presentation.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

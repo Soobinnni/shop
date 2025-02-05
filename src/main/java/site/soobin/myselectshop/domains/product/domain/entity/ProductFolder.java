@@ -1,10 +1,10 @@
-package site.soobin.myselectshop.domains.folder.domain.entity;
+package site.soobin.myselectshop.domains.product.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.soobin.myselectshop.domains.product.domain.entity.Product;
+import site.soobin.myselectshop.domains.folder.domain.entity.Folder;
 
 @Entity
 @Getter
