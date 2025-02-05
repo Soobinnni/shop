@@ -2,15 +2,10 @@ package site.soobin.myselectshop.domains.user.application.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-public class SignupRequestDto {
-  @NotBlank private String username;
-  @NotBlank private String password;
-  @Email @NotBlank private String email;
-  private boolean admin = false;
-  private String adminToken = "";
-}
+public record SignupRequestDto(
+    @NotBlank String username,
+    @NotBlank String password,
+    @Email @NotBlank String email,
+    Boolean isAdmin,
+    String adminToken) {}

@@ -34,6 +34,7 @@ public class UserController {
 
   @PostMapping("/user/signup")
   public String signup(@Valid SignupRequestDto requestDto) {
+    log.info(requestDto.toString());
     userService.signup(requestDto);
 
     return "redirect:/api/user/login-page";

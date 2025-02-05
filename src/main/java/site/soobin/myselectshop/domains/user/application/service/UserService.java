@@ -20,8 +20,8 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
 
   public void signup(SignupRequestDto requestDto) {
-    String username = requestDto.getUsername();
-    String password = passwordEncoder.encode(requestDto.getPassword());
+    String username = requestDto.username();
+    String password = passwordEncoder.encode(requestDto.password());
 
     // 회원 중복 확인
     if (userRepository.existsByUsername(username)) {
@@ -29,14 +29,14 @@ public class UserService {
     }
 
     // email 중복확인
-    String email = requestDto.getEmail();
+    String email = requestDto.email();
     if (userRepository.existsByEmail(email)) {
       throw new ApiBusinessException(UserErrorSpec.DUPLICATE_EMAIL);
     }
 
     // 사용자 ROLE 확인
     UserRoleEnum role =
-        domainService.validateAndGetRole(requestDto.isAdmin(), requestDto.getAdminToken());
+        domainService.validateAndGetRole(requestDto.isAdmin(), requestDto.adminToken());
 
     // 사용자 등록
     User user = new User(username, password, email, role);
