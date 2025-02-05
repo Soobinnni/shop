@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.soobin.myselectshop.domains.folder.application.dto.FolderResponseDto;
 import site.soobin.myselectshop.domains.product.domain.entity.Product;
+import site.soobin.myselectshop.domains.product.domain.entity.ProductFolder;
 
 @Getter
 @NoArgsConstructor
@@ -27,7 +28,8 @@ public class ProductResponseDto {
     this.myprice = product.getMyprice();
     this.productFolderList =
         product.getProductFolderList().stream()
-            .map(productFolder -> new FolderResponseDto(productFolder.getFolder()))
+            .map(ProductFolder::getFolder)
+            .map(FolderResponseDto::from)
             .toList();
   }
 }

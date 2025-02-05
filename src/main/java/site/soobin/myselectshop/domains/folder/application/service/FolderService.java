@@ -21,7 +21,7 @@ public class FolderService {
 
   public void addFolders(FolderRequestDto requestDto, UserDetailsImpl principal) {
     User user = principal.getUser();
-    List<String> folderNames = requestDto.getFolderNames();
+    List<String> folderNames = requestDto.folderNames();
     List<Folder> existingFolders = repository.findByUserAndNameIn(user, folderNames);
 
     Folders newFolders = domainService.createFolders(user, folderNames, existingFolders);
@@ -29,7 +29,9 @@ public class FolderService {
   }
 
   public List<FolderResponseDto> getFolders(UserDetailsImpl principal) {
-    return repository.findByUser(principal.getUser()).stream().map(FolderResponseDto::new).toList();
+    return repository.findByUser(principal.getUser()).stream()
+        .map(FolderResponseDto::from)
+        .toList();
   }
 
   public Folder getFolderById(Long id) {
