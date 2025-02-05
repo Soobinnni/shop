@@ -45,6 +45,7 @@ public class ProductService {
     return new ProductResponseDto(product);
   }
 
+  @Transactional(readOnly = true)
   public Page<ProductResponseDto> getProducts(
       UserDetailsImpl principal, int page, int size, String sortBy, boolean isAsc) {
     User user = getUserFromPrincipal(principal);
