@@ -1,5 +1,6 @@
 package site.soobin.myselectshop.naver.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,6 +8,7 @@ import site.soobin.myselectshop.dto.ProductMypriceRequestDto;
 import site.soobin.myselectshop.dto.ProductRequestDto;
 import site.soobin.myselectshop.dto.ProductResponseDto;
 import site.soobin.myselectshop.entity.Product;
+import site.soobin.myselectshop.naver.dto.ItemDto;
 import site.soobin.myselectshop.repository.ProductRepository;
 
 @Service
@@ -28,8 +30,7 @@ public class ProductService {
     }
 
     // 상품 조회
-    Product product =
-        repository.findById(id).orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+    Product product = this.getProductById(id);
 
     // 상품 업데이트
     product.update(requestDto);
@@ -38,7 +39,27 @@ public class ProductService {
     return new ProductResponseDto(product);
   }
 
+  public List<ProductResponseDto> getProducts() {
+    return repository.findAll().stream().map(ProductResponseDto::new).toList();
+  }
+
+  @Transactional
+  public void updateBySearch(Long id, ItemDto requestDto) {
+    // 상품 조회
+    Product product = this.getProductById(id);
+
+    // 상품 업데이트
+    product.updateByItemDto(requestDto);
+    repository.save(product);
+  }
+
   private boolean isOptimalPrice(int price) {
     return price >= MIN_MY_PRICE;
+  }
+
+  private Product getProductById(Long id) {
+    return repository
+        .findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
   }
 }
