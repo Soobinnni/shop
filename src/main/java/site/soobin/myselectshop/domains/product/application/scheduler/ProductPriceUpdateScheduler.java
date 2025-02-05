@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import site.soobin.myselectshop.domains.product.application.service.ProductService;
 import site.soobin.myselectshop.domains.product.domain.entity.Product;
-import site.soobin.myselectshop.domains.product.domain.repository.ProductRepository;
 import site.soobin.myselectshop.domains.product.infrastructure.external.naver.dto.ItemDto;
 import site.soobin.myselectshop.domains.product.infrastructure.external.naver.service.NaverApiService;
 
@@ -20,13 +19,12 @@ public class ProductPriceUpdateScheduler {
 
   private final NaverApiService naverApiService;
   private final ProductService productService;
-  private final ProductRepository productRepository;
 
   // 초, 분, 시, 일, 월, 주 순서
   @Scheduled(cron = "0 0 1 * * *") // 매일 새벽 1시
   public void updatePrice() throws InterruptedException {
     log.info("가격 업데이트 실행");
-    List<Product> productList = productRepository.findAll();
+    List<Product> productList = productService.getProducts();
     for (Product product : productList) {
       // 1초에 한 상품 씩 조회합니다 (NAVER 제한)
       TimeUnit.SECONDS.sleep(1);
