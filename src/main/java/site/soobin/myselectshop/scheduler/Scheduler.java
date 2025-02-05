@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import site.soobin.myselectshop.entity.Product;
 import site.soobin.myselectshop.naver.dto.ItemDto;
 import site.soobin.myselectshop.naver.service.NaverApiService;
-import site.soobin.myselectshop.naver.service.ProductService;
 import site.soobin.myselectshop.repository.ProductRepository;
+import site.soobin.myselectshop.service.ProductService;
 
 // https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronExpression.html
 @Slf4j(topic = "Scheduler")

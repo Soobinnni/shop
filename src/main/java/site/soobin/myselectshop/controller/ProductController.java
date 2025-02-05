@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import site.soobin.myselectshop.dto.ProductMypriceRequestDto;
 import site.soobin.myselectshop.dto.ProductRequestDto;
 import site.soobin.myselectshop.dto.ProductResponseDto;
-import site.soobin.myselectshop.naver.service.ProductService;
+import site.soobin.myselectshop.service.ProductService;
 
 @RestController
 @RequiredArgsConstructor

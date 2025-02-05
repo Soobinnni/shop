@@ -1,4 +1,4 @@
-package site.soobin.myselectshop.naver.service;
+package site.soobin.myselectshop.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
