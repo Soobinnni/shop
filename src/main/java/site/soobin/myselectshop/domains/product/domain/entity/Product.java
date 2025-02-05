@@ -57,7 +57,7 @@ public class Product extends Timestamped {
   }
 
   public void updateByItemDto(ItemDto requestDto) {
-    this.lprice = requestDto.getLprice();
+    this.lprice = requestDto.lprice();
   }
 
   public void validateAndUpdateMyPrice(int myPrice) {
