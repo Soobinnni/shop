@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import site.soobin.myselectshop.commons.security.UserDetailsImpl;
 import site.soobin.myselectshop.commons.security.jwt.JwtUtil;
-import site.soobin.myselectshop.domains.folder.application.service.KakaoService;
 import site.soobin.myselectshop.domains.user.application.dto.SignupRequestDto;
 import site.soobin.myselectshop.domains.user.application.dto.UserInfoDto;
+import site.soobin.myselectshop.domains.user.application.service.KakaoUserService;
 import site.soobin.myselectshop.domains.user.application.service.UserService;
 
 @Slf4j
@@ -27,7 +27,7 @@ import site.soobin.myselectshop.domains.user.application.service.UserService;
 public class UserController {
 
   private final UserService userService;
-  private final KakaoService kakaoService;
+  private final KakaoUserService kakaoUserService;
 
   @GetMapping("/user/login-page")
   public String loginPage() {
@@ -57,7 +57,7 @@ public class UserController {
   @GetMapping("/user/kakao/callback")
   public String kakaoLogin(@RequestParam("code") String code, HttpServletResponse response)
       throws JsonProcessingException {
-    String token = kakaoService.kakaoLogin(code);
+    String token = kakaoUserService.kakaoLogin(code);
     Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, token.substring(7));
     cookie.setPath("/");
     response.addCookie(cookie);

@@ -1,7 +1,6 @@
 package site.soobin.myselectshop.domains.user.application.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import site.soobin.myselectshop.commons.exception.ApiBusinessException;
 import site.soobin.myselectshop.commons.security.UserDetailsImpl;
@@ -17,11 +16,10 @@ import site.soobin.myselectshop.domains.user.domain.repository.UserRepository;
 public class UserService {
   private final UserRepository userRepository;
   private final UserDomainService domainService;
-  private final PasswordEncoder passwordEncoder;
 
   public void signup(SignupRequestDto requestDto) {
     String username = requestDto.username();
-    String password = passwordEncoder.encode(requestDto.password());
+    String password = domainService.getHashedPassword(requestDto.password());
 
     // 회원 중복 확인
     if (userRepository.existsByUsername(username)) {
