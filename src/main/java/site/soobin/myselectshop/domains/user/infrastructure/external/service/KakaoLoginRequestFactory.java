@@ -17,7 +17,10 @@ public class KakaoLoginRequestFactory {
   private static final String USER_INFO_PATH = "/v2/user/me";
   private static final String CONTENT_TYPE = "application/x-www-form-urlencoded;charset=utf-8";
   private static final String GRANT_TYPE = "authorization_code";
-  private static final String REDIRECT_URI = "http://localhost:8080/api/user/kakao/callback";
+  private static final String REDIRECT_URI = "api/user/kakao/callback";
+
+  @Value("${base_url}")
+  private String SERVER_BASE_URL;
 
   @Value("${kakao.key.rest-api}")
   private String kakaoRestApiKey;
@@ -55,7 +58,7 @@ public class KakaoLoginRequestFactory {
     MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
     body.add("grant_type", GRANT_TYPE);
     body.add("client_id", kakaoRestApiKey);
-    body.add("redirect_uri", REDIRECT_URI);
+    body.add("redirect_uri", SERVER_BASE_URL + "/" + REDIRECT_URI);
     body.add("code", code);
     return body;
   }
