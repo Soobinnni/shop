@@ -296,7 +296,9 @@ function addFolder() {
     window.location.reload();
   })
   .fail(function (xhr, textStatus, errorThrown) {
-    alert("중복된 폴더입니다.");
+    alert(xhr.responseJSON?.message || "알 수 없는 오류가 발생했습니다.");
+
+    console.log(xhr.status)
   });
 }
 
@@ -373,7 +375,8 @@ function addInputForProductToFolder(productId, button) {
           window.location.reload();
         })
         .fail(function (xhr, textStatus, errorThrown) {
-          alert("중복된 폴더입니다.");
+          alert(xhr.responseJSON?.message || "알 수 없는 오류가 발생했습니다.");
+          console.log(xhr.status)
         });
       });
     },
