@@ -16,54 +16,18 @@ import site.soobin.myselectshop.domains.product.application.dto.ProductMypriceRe
 import site.soobin.myselectshop.domains.product.application.dto.ProductRequestDto;
 import site.soobin.myselectshop.domains.product.application.dto.ProductResponseDto;
 import site.soobin.myselectshop.domains.product.application.service.ProductService;
-import site.soobin.myselectshop.domains.user.domain.entity.ApiUseTime;
-import site.soobin.myselectshop.domains.user.domain.entity.User;
-import site.soobin.myselectshop.domains.user.domain.repository.ApiUseTimeRepository;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
 public class ProductController {
   private final ProductService service;
-  private final ApiUseTimeRepository apiUseTimeRepository;
 
   @PostMapping
   public ProductResponseDto createProduct(
       @RequestBody ProductRequestDto requestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    // 측정 시작 시간
-    long startTime = System.currentTimeMillis();
-
-    try {
-      // 응답 보내기
-      return service.createProduct(requestDto, userDetails);
-    } finally {
-      // 측정 종료 시간
-      long endTime = System.currentTimeMillis();
-      // 수행시간 = 종료 시간 - 시작 시간
-      long runTime = endTime - startTime;
-
-      // 로그인 회원 정보
-      User loginUser = userDetails.getUser();
-
-      // API 사용시간 및 DB 에 기록
-      ApiUseTime apiUseTime = apiUseTimeRepository.findByUser(loginUser).orElse(null);
-      if (apiUseTime == null) {
-        // 로그인 회원의 기록이 없으면
-        apiUseTime = new ApiUseTime(loginUser, runTime);
-      } else {
-        // 로그인 회원의 기록이 이미 있으면
-        apiUseTime.addUseTime(runTime);
-      }
-
-      System.out.println(
-          "[API Use Time] Username: "
-              + loginUser.getUsername()
-              + ", Total Time: "
-              + apiUseTime.getTotalTime()
-              + " ms");
-      apiUseTimeRepository.save(apiUseTime);
-    }
+    return service.createProduct(requestDto, userDetails);
   }
 
   @PutMapping("/{id}")
