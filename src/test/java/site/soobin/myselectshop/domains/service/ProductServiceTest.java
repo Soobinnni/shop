@@ -1,4 +1,4 @@
-package site.soobin.myselectshop.domains.product.application.service;
+package site.soobin.myselectshop.domains.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -16,6 +16,8 @@ import site.soobin.myselectshop.domains.product.application.dto.ProductMypriceRe
 import site.soobin.myselectshop.domains.product.application.dto.ProductRequestDto;
 import site.soobin.myselectshop.domains.product.application.dto.ProductResponseDto;
 import site.soobin.myselectshop.domains.product.application.exception.ProductErrorSpec;
+import site.soobin.myselectshop.domains.product.application.service.ProductDomainService;
+import site.soobin.myselectshop.domains.product.application.service.ProductService;
 import site.soobin.myselectshop.domains.product.domain.ProductConstants;
 import site.soobin.myselectshop.domains.product.domain.entity.Product;
 import site.soobin.myselectshop.domains.product.domain.repository.ProductFolderRepository;
@@ -28,7 +30,8 @@ class ProductServiceTest {
 
   @Mock ProductRepository productRepository;
   @Mock ProductFolderRepository productFolderRepository;
-  @Mock ProductDomainService domainService;
+  @Mock
+  ProductDomainService domainService;
 
   @Mock FolderService folderService;
   @Mock PageableFactory pageableFactory;

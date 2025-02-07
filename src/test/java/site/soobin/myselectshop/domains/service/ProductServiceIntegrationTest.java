@@ -1,4 +1,4 @@
-package site.soobin.myselectshop.domains.product.application.service;
+package site.soobin.myselectshop.domains.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,6 +15,7 @@ import site.soobin.myselectshop.commons.security.UserDetailsImpl;
 import site.soobin.myselectshop.domains.product.application.dto.ProductMypriceRequestDto;
 import site.soobin.myselectshop.domains.product.application.dto.ProductRequestDto;
 import site.soobin.myselectshop.domains.product.application.dto.ProductResponseDto;
+import site.soobin.myselectshop.domains.product.application.service.ProductService;
 import site.soobin.myselectshop.domains.user.domain.entity.User;
 import site.soobin.myselectshop.domains.user.domain.repository.UserRepository;
 
@@ -24,7 +25,8 @@ import site.soobin.myselectshop.domains.user.domain.repository.UserRepository;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProductServiceIntegrationTest {
 
-  @Autowired ProductService productService;
+  @Autowired
+  ProductService productService;
   @Autowired UserRepository userRepository;
 
   User user;
