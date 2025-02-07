@@ -1,4 +1,4 @@
-package site.soobin.myselectshop.domains.product.application.aop;
+package site.soobin.myselectshop.commons.aop;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,8 +9,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import site.soobin.myselectshop.commons.aop.recorder.ApiUseTimeRecorder;
 import site.soobin.myselectshop.commons.security.UserDetailsImpl;
-import site.soobin.myselectshop.domains.user.application.service.ApiUseTimeService;
 import site.soobin.myselectshop.domains.user.domain.entity.User;
 
 @Slf4j(topic = "UseTimeAop")
@@ -18,7 +18,7 @@ import site.soobin.myselectshop.domains.user.domain.entity.User;
 @Component
 @RequiredArgsConstructor
 public class UseTimeAop {
-  private final ApiUseTimeService apiUseTimeService;
+  private final ApiUseTimeRecorder apiUseTimeRecorder;
 
   @Pointcut(
       "execution(* site.soobin.myselectshop.domains.product.presentation.api.ProductController.*(..))")
@@ -56,7 +56,7 @@ public class UseTimeAop {
     }
 
     User loginUser = getLoginUser(auth);
-    apiUseTimeService.saveApiUseTime(loginUser, runTime);
+    apiUseTimeRecorder.recordApiUseTime(loginUser, runTime);
   }
 
   private boolean isValidAuthentication(Authentication auth) {

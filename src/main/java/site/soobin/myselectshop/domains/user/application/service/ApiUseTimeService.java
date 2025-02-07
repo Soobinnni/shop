@@ -4,18 +4,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.soobin.myselectshop.commons.aop.recorder.ApiUseTimeRecorder;
 import site.soobin.myselectshop.domains.user.domain.entity.ApiUseTime;
 import site.soobin.myselectshop.domains.user.domain.entity.User;
 import site.soobin.myselectshop.domains.user.domain.repository.ApiUseTimeRepository;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
-public class ApiUseTimeService {
+public class ApiUseTimeService implements ApiUseTimeRecorder {
   private final ApiUseTimeRepository apiUseTimeRepository;
 
+  @Override
   @Transactional
-  public void saveApiUseTime(User loginUser, long runTime) {
+  public void recordApiUseTime(User loginUser, long runTime) {
     ApiUseTime apiUseTime = getOrCreateApiUseTime(loginUser, runTime);
     logApiUseTime(loginUser, apiUseTime);
     apiUseTimeRepository.save(apiUseTime);
