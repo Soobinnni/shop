@@ -10,17 +10,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import site.soobin.myselectshop.commons.security.UserDetailsImpl;
-import site.soobin.myselectshop.domains.user.domain.entity.ApiUseTime;
+import site.soobin.myselectshop.domains.user.application.service.ApiUseTimeService;
 import site.soobin.myselectshop.domains.user.domain.entity.User;
-import site.soobin.myselectshop.domains.user.domain.repository.ApiUseTimeRepository;
 
 @Slf4j(topic = "UseTimeAop")
-@Aspect // bean에만 적용 가능
+@Aspect
 @Component
 @RequiredArgsConstructor
 public class UseTimeAop {
-
-  private final ApiUseTimeRepository apiUseTimeRepository;
+  private final ApiUseTimeService apiUseTimeService;
 
   @Pointcut(
       "execution(* site.soobin.myselectshop.domains.product.presentation.api.ProductController.*(..))")
@@ -36,44 +34,37 @@ public class UseTimeAop {
 
   @Around("product() || folder() || naver()")
   public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
-    // 측정 시작 시간
     long startTime = System.currentTimeMillis();
 
     try {
-      // 핵심기능 수행
-      Object output = joinPoint.proceed();
-      return output;
+      return joinPoint.proceed();
     } finally {
-      // 측정 종료 시간
-      long endTime = System.currentTimeMillis();
-      // 수행시간 = 종료 시간 - 시작 시간
-      long runTime = endTime - startTime;
-
-      // 로그인 회원이 없는 경우, 수행시간 기록하지 않음
-      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      if (auth != null && auth.getPrincipal().getClass() == UserDetailsImpl.class) {
-        // 로그인 회원 정보
-        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
-        User loginUser = userDetails.getUser();
-
-        // API 사용시간 및 DB 에 기록
-        ApiUseTime apiUseTime = apiUseTimeRepository.findByUser(loginUser).orElse(null);
-        if (apiUseTime == null) {
-          // 로그인 회원의 기록이 없으면
-          apiUseTime = new ApiUseTime(loginUser, runTime);
-        } else {
-          // 로그인 회원의 기록이 이미 있으면
-          apiUseTime.addUseTime(runTime);
-        }
-
-        log.info(
-            "[API Use Time] Username: "
-                + loginUser.getUsername()
-                + ", Total Time: "
-                + apiUseTime.getTotalTime()
-                + " ms");
-        apiUseTimeRepository.save(apiUseTime);
-      }
+      long runTime = calculateRunTime(startTime);
+      processApiUseTime(runTime);
     }
+  }
+
+  private long calculateRunTime(long startTime) {
+    long endTime = System.currentTimeMillis();
+    return endTime - startTime;
+  }
+
+  private void processApiUseTime(long runTime) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (!isValidAuthentication(auth)) {
+      return;
+    }
+
+    User loginUser = getLoginUser(auth);
+    apiUseTimeService.saveApiUseTime(loginUser, runTime);
+  }
+
+  private boolean isValidAuthentication(Authentication auth) {
+    return auth != null && auth.getPrincipal().getClass() == UserDetailsImpl.class;
+  }
+
+  private User getLoginUser(Authentication auth) {
+    UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+    return userDetails.getUser();
   }
 }
